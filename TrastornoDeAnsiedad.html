@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trastorno de Ansiedad</title>
+
+  <style>
+    :root{
+      --bg:#000;
+      --panel:#07070a;
+      --text:#eaeaea;
+
+      --blue:#00aaff;
+      --blueGlow: rgba(0,170,255,.35);
+
+      --orange:#ff7a00;
+      --orangeGlow: rgba(255,122,0,.35);
+    }
+
+    *{ box-sizing: border-box; }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, sans-serif;
+    }
+
+    /* Layout izquierda/derecha */
+    .app{
+      display:grid;
+      grid-template-columns: 340px 1fr;
+      min-height:100vh;
+    }
+
+    .left{
+      padding:18px;
+      border-right: 1px solid #111;
+      background: linear-gradient(180deg, #050509, #000);
+    }
+
+    .right{
+      padding:26px;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(0,170,255,.08), transparent 40%),
+        radial-gradient(circle at 80% 20%, rgba(255,122,0,.06), transparent 45%),
+        var(--panel);
+    }
+
+    /* Título neón naranja LEGIBLE */
+    h1{
+      margin: 6px 0 18px;
+      font-size: 22px;
+      letter-spacing: .3px;
+      color: #ffd3a1; /* base clara */
+      text-shadow:
+        0 0 4px #ff9a2f,
+        0 0 8px #ff7a00,
+        0 0 16px rgba(255,122,0,0.7);
+    }
+
+    /* Botones neón */
+    .btn{
+      width:100%;
+      text-align:left;
+      padding:14px 14px;
+      margin:10px 0;
+      font-size:15px;
+      border-radius:10px;
+      cursor:pointer;
+
+      background: rgba(0,170,255,.10);
+      color: var(--text);
+      border: 1px solid rgba(0,170,255,.45);
+
+      box-shadow:
+        0 0 0 1px rgba(0,170,255,.15) inset,
+        0 0 18px var(--blueGlow);
+
+      transition: transform .08s ease, background .15s ease, border-color .15s ease, box-shadow .15s ease;
+    }
+
+    .btn:hover{
+      transform: translateY(-1px);
+      background: rgba(0,170,255,.16);
+      border-color: rgba(0,170,255,.75);
+      box-shadow: 0 0 26px var(--blueGlow);
+    }
+
+    .btn.active{
+      background: rgba(255,122,0,.14);
+      border-color: rgba(255,122,0,.75);
+      box-shadow: 0 0 26px var(--orangeGlow);
+      color:#fff;
+    }
+
+    /* Tarjeta derecha */
+    .card{
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 22px;
+      border: 1px solid #151515;
+      border-radius: 14px;
+      background: rgba(255,255,255,.03);
+    }
+
+    .card h2{
+      margin: 0 0 12px;
+      font-size: 24px;
+      color: #dcdcdc;
+    }
+
+    .opciones{
+      display:flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    /* Botones de opciones (derecha) */
+    .opt{
+      text-align:left;
+      padding:14px;
+      border-radius:10px;
+      border: 1px solid rgba(0,170,255,.45);
+      background: rgba(0,170,255,.08);
+      color: var(--text);
+      cursor:pointer;
+      box-shadow: 0 0 14px var(--blueGlow);
+      transition: .15s ease;
+    }
+
+    .opt:hover{
+      border-color: rgba(0,170,255,.8);
+      background: rgba(0,170,255,.14);
+    }
+
+    .hint{
+      margin-top: 10px;
+      opacity: .8;
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <!-- IZQUIERDA -->
+    <aside class="left">
+      <h1>Trastorno de Ansiedad</h1>
+
+      <!-- Botones que cambian las opciones a la derecha -->
+      <button class="btn" onclick="cargar('fobias', this)">Fobias</button>
+      <button class="btn" onclick="cargar('panico', this)">Trastorno de pánico</button>
+      <button class="btn" onclick="cargar('tag', this)">Ansiedad generalizada (TAG)</button>
+      <button class="btn" onclick="cargar('social', this)">Ansiedad social</button>
+    </aside>
+
+    <!-- DERECHA -->
+    <main class="right">
+      <div class="card">
+        <h2 id="tituloDerecha">Seleccione una categoría</h2>
+        <div class="hint" id="descripcion">
+          Al presionar un botón a la izquierda, aquí aparecerán nuevas opciones (sin cambiar de archivo).
+        </div>
+
+        <div class="opciones" id="listaOpciones"></div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const data = {
+      fobias: {
+        titulo: "Fobias",
+        desc: "Opciones relacionadas a fobias específicas.",
+        opciones: [
+          "Fobia específica (animales)",
+          "Fobia específica (situacional)",
+          "Fobia a la sangre/inyecciones",
+          "Agorafobia (temor a espacios abiertos o multitudes)"
+        ]
+      },
+      panico: {
+        titulo: "Trastorno de pánico",
+        desc: "Opciones relacionadas a crisis de pánico.",
+        opciones: [
+          "Ataques de pánico (características)",
+          "Desencadenantes comunes",
+          "Conductas de evitación",
+          "Evaluación y apoyo"
+        ]
+      },
+      tag: {
+        titulo: "Ansiedad generalizada (TAG)",
+        desc: "Opciones relacionadas a preocupación persistente.",
+        opciones: [
+          "Preocupación excesiva",
+          "Síntomas físicos (tensión, fatiga)",
+          "Sueño y ansiedad",
+          "Estrategias de afrontamiento"
+        ]
+      },
+      social: {
+        titulo: "Ansiedad social",
+        desc: "Opciones relacionadas a situaciones sociales.",
+        opciones: [
+          "Miedo a la evaluación",
+          "Exposición gradual",
+          "Habilidades sociales",
+          "Situaciones típicas (presentar, hablar)"
+        ]
+      }
+    };
+
+    function activarBoton(btn){
+      document.querySelectorAll(".btn").forEach(b => b.classList.remove("active"));
+      if(btn) btn.classList.add("active");
+    }
+
+    function cargar(clave, btn){
+      activarBoton(btn);
+
+      const info = data[clave];
+      document.getElementById("tituloDerecha").textContent = info.titulo;
+      document.getElementById("descripcion").textContent = info.desc;
+
+      const cont = document.getElementById("listaOpciones");
+      cont.innerHTML = "";
+
+      info.opciones.forEach(texto => {
+        const b = document.createElement("button");
+        b.className = "opt";
+        b.textContent = texto;
+
+        // Aquí puedes hacer que al click muestre contenido, modal, etc.
+        b.onclick = () => alert("Seleccionaste: " + texto);
+
+        cont.appendChild(b);
+      });
+    }
+  </script>
+</body>
+</html>

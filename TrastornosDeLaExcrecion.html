@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trastornos de la Excreción</title>
+
+  <style>
+    :root{
+      --bg:#000;
+      --panel:#07070a;
+      --text:#eaeaea;
+      --blue:#00aaff;
+      --blueGlow: rgba(0,170,255,.35);
+      --orange:#ff7a00;
+      --orangeGlow: rgba(255,122,0,.35);
+    }
+
+    *{ box-sizing: border-box; }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, sans-serif;
+    }
+
+    .app{
+      display:grid;
+      grid-template-columns: 360px 1fr;
+      min-height:100vh;
+    }
+
+    .left{
+      padding:18px;
+      border-right: 1px solid #111;
+      background: linear-gradient(180deg, #050509, #000);
+    }
+
+    .right{
+      padding:26px;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(0,170,255,.08), transparent 40%),
+        radial-gradient(circle at 80% 20%, rgba(255,122,0,.06), transparent 45%),
+        var(--panel);
+    }
+
+    .title{
+      margin: 6px 0 10px;
+      font-size: 18px;
+      line-height: 1.25;
+      letter-spacing: .2px;
+      color: #ffd3a1;
+      text-shadow: 0 0 4px #ff9a2f, 0 0 8px #ff7a00, 0 0 16px rgba(255,122,0,0.7);
+    }
+
+    .debug{
+      font-size: 12px;
+      opacity: .85;
+      margin: 0 0 10px;
+    }
+
+    .btn{
+      width:100%;
+      text-align:left;
+      padding:14px 14px;
+      margin:10px 0;
+      font-size:15px;
+      border-radius:10px;
+      cursor:pointer;
+
+      background: rgba(0,170,255,.10);
+      color: var(--text);
+      border: 1px solid rgba(0,170,255,.45);
+
+      box-shadow: 0 0 0 1px rgba(0,170,255,.15) inset, 0 0 18px var(--blueGlow);
+      transition: transform .08s ease, background .15s ease, border-color .15s ease, box-shadow .15s ease;
+    }
+
+    .btn:hover{
+      transform: translateY(-1px);
+      background: rgba(0,170,255,.16);
+      border-color: rgba(0,170,255,.75);
+      box-shadow: 0 0 26px var(--blueGlow);
+    }
+
+    .btn.active{
+      background: rgba(255,122,0,.14);
+      border-color: rgba(255,122,0,.75);
+      box-shadow: 0 0 26px var(--orangeGlow);
+      color:#fff;
+    }
+
+    .card{
+      max-width: 950px;
+      margin: 0 auto;
+      padding: 22px;
+      border: 1px solid #151515;
+      border-radius: 14px;
+      background: rgba(255,255,255,.03);
+    }
+
+    .card h2{
+      margin: 0 0 10px;
+      font-size: 24px;
+      color: #dcdcdc;
+    }
+
+    .hint{
+      margin-top: 8px;
+      opacity: .85;
+      font-size: 13px;
+    }
+
+    .opciones{
+      display:flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .opt{
+      text-align:left;
+      padding:14px;
+      border-radius:10px;
+      border: 1px solid rgba(0,170,255,.45);
+      background: rgba(0,170,255,.08);
+      color: var(--text);
+      cursor:pointer;
+      box-shadow: 0 0 14px var(--blueGlow);
+      transition: .15s ease;
+    }
+
+    .opt:hover{
+      border-color: rgba(0,170,255,.8);
+      background: rgba(0,170,255,.14);
+    }
+
+    .detail{
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid #1a1a1a;
+      background: rgba(0,0,0,.35);
+      display:none;
+      line-height: 1.5;
+      color: #d7d7d7;
+    }
+
+    .errorBox{
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 80, 80, .5);
+      background: rgba(255, 80, 80, .08);
+      color: #ffd5d5;
+      display:none;
+      white-space: pre-wrap;
+      font-size: 12px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <aside class="left">
+      <div class="title">Trastornos de la Excreción</div>
+      <div class="debug" id="debugLeft">✅ Interfaz cargada</div>
+
+      <button class="btn" id="btn-enuresis" onclick="cargar('enuresis', this)">Enuresis</button>
+      <button class="btn" onclick="cargar('encopresis', this)">Encopresis</button>
+      <button class="btn" onclick="cargar('alarmas', this)">Señales de alarma</button>
+      <button class="btn" onclick="cargar('apoyo', this)">Apoyo y orientación</button>
+    </aside>
+
+    <main class="right">
+      <div class="card">
+        <h2 id="tituloDerecha">Seleccione una categoría</h2>
+        <div class="hint" id="descripcion">
+          Al presionar un botón a la izquierda, aquí aparecerán nuevas opciones.
+        </div>
+
+        <div class="opciones" id="listaOpciones"></div>
+        <div class="detail" id="detalle"></div>
+        <div class="errorBox" id="errorBox"></div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Si ocurre un error JS, lo mostramos en pantalla (así no queda “negro” sin explicación)
+    window.onerror = function(message, source, lineno, colno) {
+      const box = document.getElementById("errorBox");
+      box.style.display = "block";
+      box.textContent =
+        "❌ Error de JavaScript:\n" +
+        message + "\n\n" +
+        "Archivo: " + (source || "(local)") + "\n" +
+        "Línea: " + lineno + "  Col: " + colno;
+    };
+
+    const data = {
+      enuresis: {
+        titulo: "Enuresis",
+        desc: "Seleccione un apartado para ver el contenido aquí mismo.",
+        opciones: [
+          { t: "Descripción general", d: "Micción involuntaria; suele presentarse en la noche y se evalúa según edad y frecuencia." },
+          { t: "Tipos", d: "Nocturna/diurna; primaria/secundaria. Registrar cuándo ocurre ayuda a orientar." },
+          { t: "Orientación", d: "Evitar castigos, reforzar rutinas; si persiste o preocupa, consultar a un profesional." }
+        ]
+      },
+      encopresis: {
+        titulo: "Encopresis",
+        desc: "Seleccione un apartado para ver el contenido aquí mismo.",
+        opciones: [
+          { t: "Descripción general", d: "Evacuación involuntaria en lugares inapropiados; frecuentemente asociada a estreñimiento." },
+          { t: "Con estreñimiento", d: "Retención fecal y escapes; suele requerir manejo médico y hábitos." },
+          { t: "Orientación", d: "Apoyo sin culpabilizar; establecer rutinas y buscar orientación si afecta la vida diaria." }
+        ]
+      },
+      alarmas: {
+        titulo: "Señales de alarma",
+        desc: "Seleccione un apartado para ver el contenido aquí mismo.",
+        opciones: [
+          { t: "Ver señales", d: "Dolor intenso, sangre, fiebre, pérdida de peso o cambios bruscos: consultar pronto." },
+          { t: "Cuándo consultar", d: "Si hay síntomas persistentes o impacto significativo en la vida diaria, buscar evaluación." }
+        ]
+      },
+      apoyo: {
+        titulo: "Apoyo y orientación",
+        desc: "Seleccione un apartado para ver el contenido aquí mismo.",
+        opciones: [
+          { t: "En casa", d: "Evitar castigos, apoyar con calma y consistencia; reducir estrés." },
+          { t: "En escuela", d: "Coordinar un plan discreto, sin estigmatizar; permitir acceso a baño si corresponde." }
+        ]
+      }
+    };
+
+    function activarBoton(btn){
+      document.querySelectorAll(".btn").forEach(b => b.classList.remove("active"));
+      if(btn) btn.classList.add("active");
+    }
+
+    function cargar(clave, btn){
+      activarBoton(btn);
+
+      const info = data[clave];
+      document.getElementById("tituloDerecha").textContent = info.titulo;
+      document.getElementById("descripcion").textContent = info.desc;
+
+      const cont = document.getElementById("listaOpciones");
+      cont.innerHTML = "";
+
+      const det = document.getElementById("detalle");
+      det.style.display = "none";
+      det.textContent = "";
+
+      info.opciones.forEach(item => {
+        const b = document.createElement("button");
+        b.className = "opt";
+        b.textContent = item.t;
+        b.onclick = () => {
+          det.style.display = "block";
+          det.innerHTML = "<strong>" + item.t + ":</strong><br><br>" + item.d;
+        };
+        cont.appendChild(b);
+      });
+    }
+
+    // ✅ Carga automática para que no se vea vacío
+    document.addEventListener("DOMContentLoaded", () => {
+      const firstBtn = document.getElementById("btn-enuresis");
+      cargar("enuresis", firstBtn);
+    });
+  </script>
+</body>
+</html>

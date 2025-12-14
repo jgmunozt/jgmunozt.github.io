@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Menú</title>
+
+  <style>
+    :root{
+      --bg: #000;
+      --panel: #07070a;
+      --neonBlue: #00aaff;
+      --neonBlueGlow: rgba(0,170,255,.35);
+      --activeOrange: #ff7a00;
+      --activeGlow: rgba(255,122,0,.35);
+      --text: #eaeaea;
+      --muted: #bdbdbd;
+    }
+
+    *{ box-sizing: border-box; }
+    body{
+      margin:0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .app{
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      min-height: 100vh;
+    }
+
+    /* Izquierda (botones) */
+    .sidebar{
+      background: linear-gradient(180deg, #050509, #000);
+      border-right: 1px solid #111;
+      padding: 18px;
+    }
+
+    .brand{
+      font-size: 22px;
+      font-weight: 700;
+      margin: 6px 0 16px;
+      letter-spacing: .5px;
+    }
+
+    .btn{
+      width: 100%;
+      text-align: left;
+      padding: 14px 14px;
+      margin: 10px 0;
+      font-size: 15px;
+      border-radius: 10px;
+      border: 1px solid rgba(0,170,255,.35);
+      cursor: pointer;
+
+      background: rgba(0,170,255,.10);
+      color: var(--text);
+
+      box-shadow:
+        0 0 0 1px rgba(0,170,255,.15) inset,
+        0 0 18px var(--neonBlueGlow);
+
+      transition: transform .08s ease, background .15s ease, border-color .15s ease, box-shadow .15s ease;
+    }
+
+    .btn:hover{
+      transform: translateY(-1px);
+      background: rgba(0,170,255,.16);
+      border-color: rgba(0,170,255,.6);
+      box-shadow: 0 0 26px var(--neonBlueGlow);
+    }
+
+    .btn.active{
+      background: rgba(255,122,0,.14);
+      border-color: rgba(255,122,0,.75);
+      box-shadow: 0 0 26px var(--activeGlow);
+      color: #fff;
+    }
+
+    .subMenu{
+      margin-top: 18px;
+      padding-top: 12px;
+      border-top: 1px solid #111;
+      display: none; /* se muestra solo cuando elijas "Contenido" */
+    }
+
+    .subTitle{
+      color: var(--muted);
+      font-size: 13px;
+      text-align: left;
+      margin: 8px 0 10px;
+    }
+
+    /* Derecha (contenido) */
+    .content{
+      background: radial-gradient(circle at 20% 10%, rgba(0,170,255,.08), transparent 40%),
+                  radial-gradient(circle at 80% 20%, rgba(255,122,0,.06), transparent 45%),
+                  var(--panel);
+      padding: 26px;
+    }
+
+    .card{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 22px;
+      border: 1px solid #151515;
+      border-radius: 14px;
+      background: rgba(255,255,255,.03);
+    }
+
+    h1,h2{ margin: 0 0 10px; }
+    p{ color: var(--muted); line-height: 1.5; }
+
+    .hint{
+      margin-top: 10px;
+      font-size: 13px;
+      color: #9a9a9a;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <!-- IZQUIERDA -->
+    <aside class="sidebar">
+      <div class="brand">Menú</div>
+
+      <!-- 2 opciones principales (siempre visibles) -->
+      <button class="btn" id="btn-cuestionario" onclick="mostrarPantalla('cuestionario', this)">
+        Cuestionario
+      </button>
+
+      <button class="btn" id="btn-contenido" onclick="mostrarPantalla('contenido', this)">
+        Contenido
+      </button>
+
+      <!-- Opciones que se despliegan solo al presionar "Contenido" -->
+      <div class="subMenu" id="subMenu">
+        <div class="subTitle">Opciones de contenido</div>
+
+        <button class="btn" onclick="irA('TrastornoDeNeurodarrollo.html', this)">Trastorno de neurodesarrollo</button>
+        <button class="btn" onclick="irA('EspectroDeLaEsquizofreniaYOtrosTrastornosPsicoticos.html', this)">
+          Espectro de la esquizofrenia y otros trastornos psicóticos
+        </button>
+        <button class="btn" onclick="irA('TrastornoBipolarYTrastornosRelacionados.html', this)">Trastorno bipolar y trastornos relacionados</button>
+        <button class="btn" onclick="irA('TrastornosDepresivos.html', this)">Trastornos depresivos</button>
+        <button class="btn" onclick="irA('TrastornoDeAnsiedad.html', this)">Trastorno de ansiedad</button>
+        <button class="btn" onclick="irA('TrastornoObsesivoCompulsivoYTrastornosRelacionados.html', this)">
+          Trastorno obsesivo compulsivo y trastornos relacionados
+        </button>
+        <button class="btn" onclick="irA('TrastornosRelacionadosConTraumasYFactoresDeEstres.html', this)">
+          Trastornos relacionados con traumas y factores de estrés
+        </button>
+        <button class="btn" onclick="irA('TrastornosDisociativos.html', this)">Trastornos disociativos</button>
+        <button class="btn" onclick="irA('TrastornosDeSintomasSomaticosYTrastornosRelacionados.html', this)">
+          Trastornos de síntomas somáticos y trastornos relacionados
+        </button>
+        <button class="btn" onclick="irA('TrastornosDeLaConductaAlimentariaYDeLaIngestaDeAlimentos.html', this)">
+          Trastornos de la conducta alimentaria y de la ingesta de alimentos
+        </button>
+      </div>
+    </aside>
+
+    <!-- DERECHA -->
+    <main class="content">
+      <div class="card" id="panel">
+        <h1>Bienvenido</h1>
+        <p>Seleccione <strong>Cuestionario</strong> o <strong>Contenido</strong> desde la izquierda.</p>
+        <div class="hint">Los botones activos se ponen naranjos.</div>
+      </div>
+
+      <!-- Pantalla Cuestionario -->
+      <div class="card" id="cuestionario" style="display:none; margin-top:18px;">
+        <h2>Cuestionario</h2>
+        <p>Aquí va el contenido del cuestionario.</p>
+      </div>
+
+      <!-- Pantalla Contenido -->
+      <div class="card" id="contenido" style="display:none; margin-top:18px;">
+        <h2>Contenido</h2>
+        <p>En la izquierda se desplegaron las opciones.</p>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    function setActiveButton(btn) {
+      // Quita "active" a todos los botones
+      document.querySelectorAll(".btn").forEach(b => b.classList.remove("active"));
+      // Pone "active" al presionado
+      if (btn) btn.classList.add("active");
+    }
+
+    function mostrarPantalla(id, btn) {
+      // Oculta pantallas principales
+      ["cuestionario","contenido"].forEach(x => {
+        const el = document.getElementById(x);
+        if (el) el.style.display = "none";
+      });
+
+      // Muestra la pantalla elegida
+      const target = document.getElementById(id);
+      if (target) target.style.display = "block";
+
+      // Despliega el submenú solo si elegiste "contenido"
+      const sub = document.getElementById("subMenu");
+      if (sub) sub.style.display = (id === "contenido") ? "block" : "none";
+
+      setActiveButton(btn);
+    }
+
+    function irA(archivo, btn) {
+      setActiveButton(btn);
+      window.location.href = archivo;
+    }
+
+    // Por defecto (opcional): muestra "Cuestionario"
+    mostrarPantalla("cuestionario", document.getElementById("btn-cuestionario"));
+  </script>
+</body>
+</html>

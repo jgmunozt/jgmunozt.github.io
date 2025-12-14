@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trastornos de la Conducta Alimentaria</title>
+
+  <style>
+    :root{
+      --bg:#000;
+      --panel:#07070a;
+      --text:#eaeaea;
+
+      --blue:#00aaff;
+      --blueGlow: rgba(0,170,255,.35);
+
+      --orange:#ff7a00;
+      --orangeGlow: rgba(255,122,0,.35);
+    }
+
+    *{ box-sizing: border-box; }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, sans-serif;
+    }
+
+    /* Layout izquierda/derecha */
+    .app{
+      display:grid;
+      grid-template-columns: 360px 1fr;
+      min-height:100vh;
+    }
+
+    .left{
+      padding:18px;
+      border-right: 1px solid #111;
+      background: linear-gradient(180deg, #050509, #000);
+    }
+
+    .right{
+      padding:26px;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(0,170,255,.08), transparent 40%),
+        radial-gradient(circle at 80% 20%, rgba(255,122,0,.06), transparent 45%),
+        var(--panel);
+    }
+
+    /* Título neón naranja LEGIBLE */
+    .title{
+      margin: 6px 0 18px;
+      font-size: 18px;
+      line-height: 1.25;
+      letter-spacing: .2px;
+      color: #ffd3a1; /* base clara */
+      text-shadow:
+        0 0 4px #ff9a2f,
+        0 0 8px #ff7a00,
+        0 0 16px rgba(255,122,0,0.7);
+    }
+
+    /* Botones neón (izquierda) */
+    .btn{
+      width:100%;
+      text-align:left;
+      padding:14px 14px;
+      margin:10px 0;
+      font-size:15px;
+      border-radius:10px;
+      cursor:pointer;
+
+      background: rgba(0,170,255,.10);
+      color: var(--text);
+      border: 1px solid rgba(0,170,255,.45);
+
+      box-shadow:
+        0 0 0 1px rgba(0,170,255,.15) inset,
+        0 0 18px var(--blueGlow);
+
+      transition: transform .08s ease, background .15s ease, border-color .15s ease, box-shadow .15s ease;
+    }
+
+    .btn:hover{
+      transform: translateY(-1px);
+      background: rgba(0,170,255,.16);
+      border-color: rgba(0,170,255,.75);
+      box-shadow: 0 0 26px var(--blueGlow);
+    }
+
+    .btn.active{
+      background: rgba(255,122,0,.14);
+      border-color: rgba(255,122,0,.75);
+      box-shadow: 0 0 26px var(--orangeGlow);
+      color:#fff;
+    }
+
+    /* Tarjeta derecha */
+    .card{
+      max-width: 950px;
+      margin: 0 auto;
+      padding: 22px;
+      border: 1px solid #151515;
+      border-radius: 14px;
+      background: rgba(255,255,255,.03);
+    }
+
+    .card h2{
+      margin: 0 0 10px;
+      font-size: 24px;
+      color: #dcdcdc;
+    }
+
+    .hint{
+      margin-top: 8px;
+      opacity: .85;
+      font-size: 13px;
+    }
+
+    .opciones{
+      display:flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    /* Botones de opciones (derecha) */
+    .opt{
+      text-align:left;
+      padding:14px;
+      border-radius:10px;
+      border: 1px solid rgba(0,170,255,.45);
+      background: rgba(0,170,255,.08);
+      color: var(--text);
+      cursor:pointer;
+      box-shadow: 0 0 14px var(--blueGlow);
+      transition: .15s ease;
+    }
+
+    .opt:hover{
+      border-color: rgba(0,170,255,.8);
+      background: rgba(0,170,255,.14);
+    }
+
+    /* Panel de detalle (opcional) */
+    .detail{
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid #1a1a1a;
+      background: rgba(0,0,0,.35);
+      display:none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <!-- IZQUIERDA -->
+    <aside class="left">
+      <div class="title">Trastornos de la Conducta Alimentaria y de la Ingesta de Alimentos</div>
+
+      <!-- Categorías -->
+      <button class="btn" onclick="cargar('anorexia', this)">Anorexia nerviosa</button>
+      <button class="btn" onclick="cargar('bulimia', this)">Bulimia nerviosa</button>
+      <button class="btn" onclick="cargar('atracon', this)">Trastorno por atracón</button>
+      <button class="btn" onclick="cargar('otros', this)">Otros trastornos alimentarios</button>
+    </aside>
+
+    <!-- DERECHA -->
+    <main class="right">
+      <div class="card">
+        <h2 id="tituloDerecha">Seleccione una categoría</h2>
+        <div class="hint" id="descripcion">
+          Al presionar un botón a la izquierda, aquí aparecerán nuevas opciones (sin cambiar de archivo).
+        </div>
+
+        <div class="opciones" id="listaOpciones"></div>
+
+        <!-- opcional: un panel para mostrar detalle de la opción seleccionada -->
+        <div class="detail" id="detalle"></div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const data = {
+      anorexia: {
+        titulo: "Anorexia nerviosa",
+        desc: "Seleccione un apartado para desplegar información en esta misma página.",
+        opciones: [
+          { t: "Características principales", d: "Restricción persistente, temor a subir de peso, alteración en la percepción corporal." },
+          { t: "Señales de alerta", d: "Pérdida de peso notable, conductas restrictivas, ejercicio excesivo, preocupación intensa por calorías." },
+          { t: "Factores asociados", d: "Biológicos, psicológicos y sociales; presión por la imagen, perfeccionismo, ansiedad, etc." },
+          { t: "Apoyo y derivación", d: "Evaluación profesional, acompañamiento familiar y tratamiento interdisciplinario." }
+        ]
+      },
+      bulimia: {
+        titulo: "Bulimia nerviosa",
+        desc: "Seleccione un apartado para desplegar información.",
+        opciones: [
+          { t: "Características principales", d: "Episodios de atracones seguidos de conductas compensatorias (vómitos, laxantes, etc.)." },
+          { t: "Señales de alerta", d: "Ir al baño tras comer, preocupación por el peso, fluctuaciones, secretismo con la comida." },
+          { t: "Riesgos frecuentes", d: "Alteraciones electrolíticas, problemas gastrointestinales y dentales; impacto emocional." },
+          { t: "Apoyo y derivación", d: "Tratamiento psicológico y médico; estrategias de regulación emocional y hábitos." }
+        ]
+      },
+      atracon: {
+        titulo: "Trastorno por atracón",
+        desc: "Seleccione un apartado para desplegar información.",
+        opciones: [
+          { t: "Características principales", d: "Atracones recurrentes sin conductas compensatorias habituales." },
+          { t: "Señales de alerta", d: "Comer muy rápido, hasta sentirse mal, culpa o vergüenza posterior." },
+          { t: "Factores asociados", d: "Estrés, ansiedad, depresión, antecedentes de dietas restrictivas." },
+          { t: "Apoyo y derivación", d: "Enfoque terapéutico, nutricional y médico según necesidad." }
+        ]
+      },
+      otros: {
+        titulo: "Otros trastornos alimentarios",
+        desc: "Seleccione un apartado para desplegar información.",
+        opciones: [
+          { t: "ARFID (evitación/restricción)", d: "Restricción por textura/olor/miedo a atragantarse, sin foco en peso/figura." },
+          { t: "Pica", d: "Ingesta persistente de sustancias no nutritivas (requiere evaluación clínica)." },
+          { t: "Rumiación", d: "Regurgitación repetida de alimentos; evaluación profesional recomendada." },
+          { t: "Consulta/Orientación", d: "Si hay dudas, buscar apoyo profesional temprano mejora el pronóstico." }
+        ]
+      }
+    };
+
+    function activarBoton(btn){
+      document.querySelectorAll(".btn").forEach(b => b.classList.remove("active"));
+      if(btn) btn.classList.add("active");
+    }
+
+    function cargar(clave, btn){
+      activarBoton(btn);
+
+      const info = data[clave];
+      document.getElementById("tituloDerecha").textContent = info.titulo;
+      document.getElementById("descripcion").textContent = info.desc;
+
+      const cont = document.getElementById("listaOpciones");
+      cont.innerHTML = "";
+
+      // Oculta el detalle cuando cambias de categoría
+      const det = document.getElementById("detalle");
+      det.style.display = "none";
+      det.textContent = "";
+
+      info.opciones.forEach(item => {
+        const b = document.createElement("button");
+        b.className = "opt";
+        b.textContent = item.t;
+
+        // En vez de alert, mostramos el texto en el panel detalle
+        b.onclick = () => {
+          det.style.display = "block";
+          det.innerHTML = "<strong>" + item.t + ":</strong><br><br>" + item.d;
+        };
+
+        cont.appendChild(b);
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bipolar</title>
+  <style>
+    body{margin:0;background:#000;color:#eaeaea;font-family:Arial,sans-serif;}
+    .app{display:grid;grid-template-columns:340px 1fr;min-height:100vh;}
+    .left{padding:18px;border-right:1px solid #111;}
+    .right{padding:26px;background:#07070a;}
+    .btn{width:100%;text-align:left;padding:14px;margin:10px 0;border-radius:10px;cursor:pointer;
+         background:rgba(0,170,255,.10);border:1px solid rgba(0,170,255,.45);color:#fff;}
+    .btn.active{background:rgba(255,122,0,.18);border-color:rgba(255,122,0,.75);}
+    .opt{width:100%;text-align:left;padding:14px;margin:8px 0;border-radius:10px;cursor:pointer;
+         background:rgba(0,170,255,.08);border:1px solid rgba(0,170,255,.45);color:#fff;}
+    .card{max-width:900px;margin:0 auto;padding:18px;border:1px solid #151515;border-radius:14px;background:rgba(255,255,255,.03);}
+    .title{color:#ffd3a1;text-shadow:0 0 6px #ff7a00;margin:0 0 14px;font-size:18px;}
+    #debug{font-size:12px;opacity:.85;margin-top:10px;}
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <aside class="left">
+      <div class="title">Trastorno Bipolar y Trastornos Relacionados</div>
+
+      <button class="btn" onclick="cargar('bipolarI', this)">Trastorno bipolar I</button>
+      <button class="btn" onclick="cargar('bipolarII', this)">Trastorno bipolar II</button>
+      <button class="btn" onclick="cargar('ciclotimia', this)">Trastorno ciclotímico</button>
+      <button class="btn" onclick="cargar('otros', this)">Otros relacionados</button>
+
+      <div id="debug">Cargando JS…</div>
+    </aside>
+
+    <main class="right">
+      <div class="card">
+        <h2 id="tituloDerecha">Seleccione una categoría</h2>
+        <p id="descripcion">Al presionar un botón, aquí se cargarán opciones.</p>
+        <div id="listaOpciones"></div>
+        <div id="detalle" style="display:none;margin-top:12px;padding:12px;border:1px solid #222;border-radius:10px;"></div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // ✅ Si ves esto, el JS sí está cargando
+    document.getElementById("debug").textContent = "✅ JS OK: presiona un botón";
+
+    const data = {
+      bipolarI: {
+        titulo: "Trastorno bipolar I",
+        desc: "Elija un apartado:",
+        opciones: [
+          { t: "Características principales", d: "Episodios de manía y posible depresión." },
+          { t: "Señales de alerta", d: "Disminución del sueño, impulsividad, irritabilidad marcada." }
+        ]
+      },
+      bipolarII: {
+        titulo: "Trastorno bipolar II",
+        desc: "Elija un apartado:",
+        opciones: [
+          { t: "Características principales", d: "Hipomanía + depresión mayor." },
+          { t: "Diferencia con bipolar I", d: "No hay manía completa." }
+        ]
+      },
+      ciclotimia: {
+        titulo: "Trastorno ciclotímico",
+        desc: "Elija un apartado:",
+        opciones: [
+          { t: "Características principales", d: "Fluctuaciones crónicas del ánimo." },
+          { t: "Duración", d: "Curso prolongado con altibajos." }
+        ]
+      },
+      otros: {
+        titulo: "Otros relacionados",
+        desc: "Elija un apartado:",
+        opciones: [
+          { t: "Inducido por sustancias", d: "Cambios del ánimo vinculados a consumo/medicación." },
+          { t: "Cuándo buscar ayuda", d: "Si afecta la vida diaria, consultar." }
+        ]
+      }
+    };
+
+    function activarBoton(btn){
+      document.querySelectorAll(".btn").forEach(b => b.classList.remove("active"));
+      if(btn) btn.classList.add("active");
+    }
+
+    function cargar(clave, btn){
+      activarBoton(btn);
+
+      const info = data[clave];
+      document.getElementById("tituloDerecha").textContent = info.titulo;
+      document.getElementById("descripcion").textContent = info.desc;
+
+      const cont = document.getElementById("listaOpciones");
+      cont.innerHTML = "";
+
+      const det = document.getElementById("detalle");
+      det.style.display = "none";
+      det.textContent = "";
+
+      info.opciones.forEach(item => {
+        const b = document.createElement("button");
+        b.className = "opt";
+        b.textContent = item.t;
+        b.onclick = () => {
+          det.style.display = "block";
+          det.innerHTML = "<strong>" + item.t + ":</strong><br><br>" + item.d;
+        };
+        cont.appendChild(b);
+      });
+    }
+  </script>
+</body>
+</html>

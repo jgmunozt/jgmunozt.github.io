@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trastornos relacionados con traumas y factores de estrés</title>
+
+  <style>
+    :root{
+      --bg:#000;
+      --panel:#07070a;
+      --text:#eaeaea;
+      --blue:#00aaff;
+      --blueGlow: rgba(0,170,255,.35);
+      --orange:#ff7a00;
+      --orangeGlow: rgba(255,122,0,.35);
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      background:var(--bg);
+      color:var(--text);
+      font-family:Arial, sans-serif;
+    }
+
+    /* Layout */
+    .app{
+      display:grid;
+      grid-template-columns:360px 1fr;
+      min-height:100vh;
+    }
+
+    .left{
+      padding:18px;
+      border-right:1px solid #111;
+      background:linear-gradient(180deg,#050509,#000);
+    }
+
+    .right{
+      padding:26px;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(0,170,255,.08), transparent 40%),
+        radial-gradient(circle at 80% 20%, rgba(255,122,0,.06), transparent 45%),
+        var(--panel);
+    }
+
+    /* Título */
+    .title{
+      margin:6px 0 18px;
+      font-size:18px;
+      color:#ffd3a1;
+      text-shadow:
+        0 0 4px #ff9a2f,
+        0 0 8px #ff7a00,
+        0 0 16px rgba(255,122,0,.7);
+    }
+
+    /* Botones izquierda */
+    .btn{
+      width:100%;
+      text-align:left;
+      padding:14px;
+      margin:10px 0;
+      font-size:15px;
+      border-radius:10px;
+      cursor:pointer;
+      background:rgba(0,170,255,.10);
+      color:var(--text);
+      border:1px solid rgba(0,170,255,.45);
+      box-shadow:0 0 18px var(--blueGlow);
+      transition:.15s ease;
+    }
+
+    .btn:hover{
+      background:rgba(0,170,255,.16);
+      border-color:rgba(0,170,255,.75);
+      box-shadow:0 0 26px var(--blueGlow);
+      transform:translateY(-1px);
+    }
+
+    .btn.active{
+      background:rgba(255,122,0,.14);
+      border-color:rgba(255,122,0,.75);
+      box-shadow:0 0 26px var(--orangeGlow);
+      color:#fff;
+    }
+
+    /* Panel derecho */
+    .card{
+      max-width:950px;
+      margin:0 auto;
+      padding:22px;
+      border:1px solid #151515;
+      border-radius:14px;
+      background:rgba(255,255,255,.03);
+    }
+
+    .card h2{
+      margin:0 0 10px;
+      font-size:24px;
+      color:#dcdcdc;
+    }
+
+    .hint{
+      font-size:13px;
+      opacity:.85;
+    }
+
+    .opciones{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      margin-top:14px;
+    }
+
+    .opt{
+      padding:14px;
+      border-radius:10px;
+      border:1px solid rgba(0,170,255,.45);
+      background:rgba(0,170,255,.08);
+      color:var(--text);
+      cursor:pointer;
+      box-shadow:0 0 14px var(--blueGlow);
+      transition:.15s ease;
+      text-align:left;
+    }
+
+    .opt:hover{
+      background:rgba(0,170,255,.14);
+      border-color:rgba(0,170,255,.8);
+    }
+
+    .detail{
+      margin-top:16px;
+      padding:14px;
+      border-radius:12px;
+      border:1px solid #1a1a1a;
+      background:rgba(0,0,0,.35);
+      display:none;
+      line-height:1.5;
+      color:#d7d7d7;
+    }
+  </style>
+</head>
+
+<body>
+<div class="app">
+
+  <!-- IZQUIERDA -->
+  <aside class="left">
+    <div class="title">Trastornos relacionados con traumas y factores de estrés</div>
+
+    <button class="btn" onclick="cargar('tept', this)">Trastorno de estrés postraumático (TEPT)</button>
+    <button class="btn" onclick="cargar('agudo', this)">Trastorno de estrés agudo</button>
+    <button class="btn" onclick="cargar('adaptacion', this)">Trastorno de adaptación</button>
+    <button class="btn" onclick="cargar('reactivo', this)">Trastorno reactivo del apego</button>
+  </aside>
+
+  <!-- DERECHA -->
+  <main class="right">
+    <div class="card">
+      <h2 id="tituloDerecha">Elija una opción</h2>
+      <p class="hint" id="descripcion">
+        Seleccione una categoría desde el menú izquierdo.
+      </p>
+
+      <div class="opciones" id="listaOpciones"></div>
+      <div class="detail" id="detalle"></div>
+    </div>
+  </main>
+
+</div>
+
+<script>
+  const data = {
+    tept:{
+      titulo:"Trastorno de estrés postraumático (TEPT)",
+      desc:"Seleccione un apartado.",
+      opciones:[
+        {t:"Características principales", d:"Reexperimentación del trauma, evitación, hipervigilancia y cambios emocionales persistentes."},
+        {t:"Desencadenantes frecuentes", d:"Eventos traumáticos como violencia, accidentes o desastres."},
+        {t:"Orientación", d:"Intervención psicológica especializada y apoyo temprano."}
+      ]
+    },
+    agudo:{
+      titulo:"Trastorno de estrés agudo",
+      desc:"Seleccione un apartado.",
+      opciones:[
+        {t:"Características", d:"Síntomas similares al TEPT, pero de duración limitada (hasta un mes)."},
+        {t:"Curso", d:"Puede remitir o evolucionar a TEPT."}
+      ]
+    },
+    adaptacion:{
+      titulo:"Trastorno de adaptación",
+      desc:"Seleccione un apartado.",
+      opciones:[
+        {t:"Características", d:"Respuesta emocional o conductual desproporcionada ante un estresor identificable."},
+        {t:"Ejemplos de estresores", d:"Separaciones, pérdidas, cambios importantes de vida."}
+      ]
+    },
+    reactivo:{
+      titulo:"Trastorno reactivo del apego",
+      desc:"Seleccione un apartado.",
+      opciones:[
+        {t:"Características", d:"Patrón persistente de inhibición emocional hacia cuidadores."},
+        {t:"Contexto", d:"Historia de negligencia grave o cambios repetidos de cuidadores."}
+      ]
+    }
+  };
+
+  function activar(btn){
+    document.querySelectorAll(".btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+  }
+
+  function cargar(clave, btn){
+    activar(btn);
+
+    const info = data[clave];
+    document.getElementById("tituloDerecha").textContent = info.titulo;
+    document.getElementById("descripcion").textContent = info.desc;
+
+    const cont = document.getElementById("listaOpciones");
+    cont.innerHTML = "";
+
+    const det = document.getElementById("detalle");
+    det.style.display = "none";
+
+    info.opciones.forEach(o=>{
+      const b=document.createElement("button");
+      b.className="opt";
+      b.textContent=o.t;
+      b.onclick=()=>{
+        det.style.display="block";
+        det.innerHTML="<strong>"+o.t+"</strong><br><br>"+o.d;
+      };
+      cont.appendChild(b);
+    });
+  }
+</script>
+</body>
+</html>

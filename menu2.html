@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Menú</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        h1 {
+            font-size: 32px;
+        }
+
+        button {
+            width: 200px;
+            padding: 15px;
+            margin: 10px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            background: #007bff;
+            color: white;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .pantalla {
+            display: none;
+            margin-top: 40px;
+            padding: 20px;
+        }
+    </style>
+
+</head>
+<body>
+
+    <h1>Menu</h1>
+
+    <button onclick="mostrar('cuestionario')">Cuestionario</button>
+    <br>
+        <scrip>
+            function mostrar(){
+                
+            }
+        </scrip>
+    <button onclick="mostrar('contenido')">Contenido</button>
+
+    <!-- PANTALLA 1 -->
+    <div id="cuestionario" class="pantalla">
+        <h2>Cuestionario</h2>
+        <p>Aquí va el contenido del cuestionario.</p>
+    </div>
+
+
+
+
+
+
+
+
+    <!-- PANTALLA 2 -->
+    <div id = "contenido" class = 'pantalla'>
+   
+        <button onclick="mostrarTrastorno35('Trastorno de neurodarrollo')">Trastorno de neurodarrollo</button>  
+    <br>  
+    <script>
+        function mostrarTrastorno35(){
+            window.location.href = "TrastornoDeNeurodarrollo.html";
+        }
+
+    </script>
+
+
+
+
+
+    <button onclick="mostrarTrastorno101('Espestro de la esquizofrenia y otros trastornos psicoticos')">Espestro de la esquizofrenia y otros trastornos psicoticos</button>   
+    <br>
+    <script>
+        function mostrarTrastorno101(){
+            window.location.href = "EspestroDeLaEsquizofreniaYotrosTrastornosPsicoticos.html";
+        }
+
+    </script>
+
+
+
+    <button onclick="mostrar('Trastorno bipolar y trastornos relacionados')">Trastorno bipolar y trastornos relacionados</button> 
+    <br>
+    <script>
+        function mostrarTrastorno139(){
+            window.location.href = 'TrastornoBipolarYTrastornosRelacionados.html';
+        }
+
+    </script>
+      
+
+
+    <button onclick="mostrarTrastorno177('Trastornos Depresivos')">Trastornos depresivos</button>  
+     <br> 
+    <script>
+        function mostrarTrastorno177(){
+            window.location.href = 'TrastornosDepresivos.html';
+        }
+
+    </script>
+
+
+ 
+    <button onclick="mostrarTrastorno215('TrastornosDeAnsiedad')">Trastorno de asiedad</button>   
+    <br>
+    <script>
+        function mostrarTrastorno215(){
+            window.location.href = 'TrastornoDeAnsiedad.html';
+        }
+
+        
+
+
+    </script>
+
+
+
+    <Button onclick="mostrarTrastorno263('TrastornoObsesivoCompultivoYTrastornosRelacionados')">Trastorno obsesivo compultivo y trastornos relacionados</button>  
+    <br>
+    <script>
+        function mostrarTrastorno263(){
+            window.location.href = 'TrastornoObsesivoCompultivoYTrastornosRelacionados.html';
+        }
+    </script>
+       
+
+
+    <button onclick="mostrarTrastorno295('TrastornosRelacionadosConTraumasYFactoresDeEstres')">Trastornos relacionados con traumas y factores de estres</button> 
+    <br>
+    <script>
+        function mostrarTrastorno295(){
+            window.location.href = 'TrastornosRelacionadosConTraumasYFactoresDeEstre.html';
+        }
+
+    </script> 
+
+    
+    <button onclick="mostrarTrastorno329('TrastornosDisociativo')">Trastornos disociativos</button>   
+    <br>
+    <script>
+        function mostrarTrastorno329(){
+            window.location.href = 'TrastornosDisociativo.html';
+        }
+    </script>
+
+
+    <button onclick="mostrarTrastorno349('trastornosDeSintomasSomaticosYTrastornosRelacionados')">trastornos de sintomas somaticos y trastornos relacionados</button>  
+    <br>
+    <script>
+        function mostrarTrastorno329(){
+            windo.location.href = 'trastornosDeSintomasSomaticosYTrastornosRelacionados.html';
+        }
+    </script>
+
+    <button onclick="mostrarTrastorno371('tractornosDeLasConductaAlimentariaYDeLaIngestaDeAlimentos')">tractornos de las conducta alimentaria y de la ingesta de alimentos</button> 
+    <br>
+    <script> ]\]
+    <div>Otros problemas de pueden ser objeto de atencion clinicas</div>
+    <br>
+    </div>
+
+
+
+    <script>
+        function mostrar(id) {
+            // Ocultar todas las pantallas
+            document.querySelectorAll(".pantalla").forEach(p => p.style.display = "none");
+
+            // Mostrar solo la pantalla seleccionada
+            document.getElementById(id).style.display = "block";
+        }
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+
+
+</html>
+
+
+
+
+
